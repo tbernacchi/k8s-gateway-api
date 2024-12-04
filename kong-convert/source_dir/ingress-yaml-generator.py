@@ -12,13 +12,13 @@ def get_ingresses():
 def main():
     ingresses = get_ingresses()
     
-    # Cria diretório para os manifestos se não existir
+    # Create dir if does not exist.
     output_dir = "ingress-manifests"
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
     
     for ing in ingresses:
-        # Remove campos gerenciados pelo kubernetes
+        # Remove fields managed by kubernetes
         if 'status' in ing:
             del ing['status']
         if 'metadata' in ing:
@@ -26,13 +26,13 @@ def main():
                 if field in ing['metadata']:
                     del ing['metadata'][field]
         
-        # Gera nome do arquivo baseado no namespace e nome do ingress
+        # Generate name of the file based on namespace and ingress name.
         filename = f"{output_dir}/{ing['metadata']['namespace']}-{ing['metadata']['name']}.yaml"
         
-        # Salva cada ingress em um arquivo separado com uma linha em branco no final
+        # Save each ingress in a separate file 
         with open(filename, 'w') as f:
             yaml.dump(ing, f, default_flow_style=False)
-            f.write('\n')  # Adiciona uma linha em branco no final
+            f.write('\n')  # Add an empty line in the end of the files.
         
         print(f"Created: {filename}")
 

@@ -1,3 +1,4 @@
+---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
@@ -6,7 +7,7 @@ metadata:
 spec:
   parentRefs:
   - name: cafe-gateway
-    namespace: default
+    namespace: default    # Be attention to namespace
   hostnames:
   - "mykubernetes.com"
   rules:
@@ -15,15 +16,11 @@ spec:
         type: PathPrefix
         value: /prometheus
     filters:
-    - type: RequestHeaderModifier
-      requestHeaderModifier:
+    - type: ResponseHeaderModifier
+      responseHeaderModifier:
         add:
-        - name: "Access-Control-Allow-Origin"
+        - name: "Access-Control-Allow-Origin" # Anyone from mykubernetes.com - more secure -> 'Access-Control-Allow-Origin: "http://mykubernetes.com"' 
           value: "*"
-        - name: "Access-Control-Allow-Methods"
-          value: "GET, POST, OPTIONS"
-        - name: "Access-Control-Allow-Headers"
-          value: "Origin, Content-Type, Accept"
     backendRefs:
     - name: my-kube-prometheus-stack-prometheus
       port: 9090
