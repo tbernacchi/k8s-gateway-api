@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/issuer: self-signed
+  name: prometheus
+  namespace: monitoring
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: mykubernetes.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: my-kube-prometheus-stack-prometheus
+            port:
+              number: 9090
+        path: /prometheus
+        pathType: Prefix
+  tls:
+  - hosts:
+    - mykubernetes.com
+    secretName: my-kubernetes-cert
+

@@ -1,0 +1,45 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  creationTimestamp: null
+  name: nginx
+  namespace: kubernetes-dashboard
+spec:
+  gatewayClassName: nginx
+  listeners:
+  - hostname: mykubernetes.com
+    name: mykubernetes-com-http
+    port: 80
+    protocol: HTTP
+  - hostname: mykubernetes.com
+    name: mykubernetes-com-https
+    port: 443
+    protocol: HTTPS
+    tls:
+      certificateRefs:
+      - group: null
+        kind: null
+        name: my-kubernetes-cert
+status: {}
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  creationTimestamp: null
+  name: dashboard-mykubernetes-com
+  namespace: kubernetes-dashboard
+spec:
+  hostnames:
+  - mykubernetes.com
+  parentRefs:
+  - name: nginx
+  rules:
+  - backendRefs:
+    - name: kubernetes-dashboard-kong-proxy
+      port: 443
+    matches:
+    - path:
+        type: PathPrefix
+        value: /
+status:
+  parents: []
