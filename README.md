@@ -33,7 +33,7 @@ git clone git@github.com:tbernacchi/k8s-gateway-api.git
 kubectl apply -f gateway/coffee-gateway.yaml
 ```
 
-You should see the Gateway resource created in the `default` namespace.
+You should see the Gateway resource created in the `default` namespace:
 
 ```bash
 # k get gateway -n default
@@ -41,14 +41,14 @@ NAME           CLASS   ADDRESS         PROGRAMMED   AGE
 cafe-gateway   nginx   192.168.1.131   True         12s
 ```
 
-Lets deploy `coffee-app/` and the HTTPRoute resource:
+Deploy `coffee-app/` and the `HTTPRoute` resources:
 
 ```bash
 kubectl apply -f coffee-app/
 kubectl apply -f routing/coffee-routing.yaml
 ```
 
-You should see the HTTPRoute resource created in the `default` namespace.
+You should see the `HTTPRoute` resource created in the `default` namespace:
 
 ```bash
 # kubectl get httproute -n default
@@ -109,9 +109,9 @@ tar -xzf ingress2gateway_Linux_arm64.tar.gz && \
 chmod +x ingress2gateway && rm -f ingress2gateway_Linux_arm64.tar.gz
 ```
 
-* Be attention of your architecture when downloading the ingress2gateway binary. [releases](https://github.com/Kong/ingress2gateway/releases/)
+* Be attention of your architecture when downloading the ingress2gateway binary. [[releases]](https://github.com/Kong/ingress2gateway/releases/)
 
-In order to convert the ingress resources to Gateway API resources you will need to have the ingress resources in the `source_dir` directory and the destination directory will be populated with the converted HTTPRoute resources. [[See more]](https://docs.konghq.com/kubernetes-ingress-controller/latest/guides/migrate/ingress-to-gateway/)
+In order to convert the ingress resources to Gateway API resources you will need to have the ingress resources in the `source_dir` directory and the destination directory will be populated with the converted `HTTPRoute` resources. [[See more]](https://docs.konghq.com/kubernetes-ingress-controller/latest/guides/migrate/ingress-to-gateway/)
 
 To accomplish this there is this `ingress-yaml-generator.py` script:
 
@@ -120,9 +120,9 @@ cd kong-convert/
 ./source_dir/ingress-yaml-generator.py
 ```
 
-This script will generate the current ingress resources in the `source_dir/ingress-manifests` directory. 
+This script will generate all the current ingress resources in the `source_dir/ingress-manifests` directory. 
 
-Now you can use the `ingress2gateway` binary to convert the ingress resources to HTTPRoute resources in the `dest_dir` directory.
+Converting the ingresses to HTTPRoute resources:
 
 ```bash
 cd ingress2gateway/
@@ -138,4 +138,3 @@ for file in ${SOURCE_DIR}/*; do ./ingress2gateway print --input-file ${file} -A 
 - https://blog.nginx.org/blog/5-reasons-to-try-the-kubernetes-gateway-api
 - https://blog.nashtechglobal.com/hands-on-kubernetes-gateway-api-with-nginx-gateway-fabric/
 - https://docs.nginx.com/nginx-gateway-fabric/installation/installing-ngf/helm/
-
