@@ -131,7 +131,8 @@ for file in ${SOURCE_DIR}/*; do ./ingress2gateway print --input-file ${file} -A 
 
 ### WIP
 
-- [ ] I just want to create HTTPRoute on the output of the ingress2gateway conversion, not the Gateway resource.
+- [ ] I just want to create HTTPRoute on the output of the ingress2gateway conversion, not the Gateway resource. (Kong tool);
+- [ ] Put ["---"] on the output of ingress manifests on `source_dir/ingress-manifests` directory.
 
 ### References
 
