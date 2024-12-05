@@ -88,7 +88,7 @@ Hello From COFFEE (V2)!
 
 ### Convert Ingress resources to Gateway API resources
 
-On the `kong-convert/ingress2gateway/` directory you will find the official Kong conversion tool and a script to convert the ingress resources to HTTPRoute resources.
+On the `kong-convert/ingress2gateway/` directory it contains the official Kong conversion tool:
 
 ```bash
 # tree kong-convert -L 1
@@ -111,7 +111,7 @@ chmod +x ingress2gateway && rm -f ingress2gateway_Linux_arm64.tar.gz
 
 * Be attention of your architecture when downloading the ingress2gateway binary. [[releases]](https://github.com/Kong/ingress2gateway/releases/)
 
-In order to convert the ingress resources to Gateway API resources you will need to have the ingress resources in the `source_dir` directory and the destination directory will be populated with the converted `HTTPRoute` resources. [[See more]](https://docs.konghq.com/kubernetes-ingress-controller/latest/guides/migrate/ingress-to-gateway/)
+In order to convert the ingress resources to `HTTPRoute` resources you're going to need the ingress resources in the `source_dir` directory. [[See more]](https://docs.konghq.com/kubernetes-ingress-controller/latest/guides/migrate/ingress-to-gateway/)
 
 To accomplish this there is this `ingress-yaml-generator.py` script:
 
@@ -120,7 +120,7 @@ cd kong-convert/
 ./source_dir/ingress-yaml-generator.py
 ```
 
-This script will generate all the current ingress resources in the `source_dir/ingress-manifests` directory. 
+This script will generate all the current ingresses resources in the `source_dir/ingress-manifests` directory. 
 
 Converting the ingresses to HTTPRoute resources:
 
