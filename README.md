@@ -48,8 +48,6 @@ kubectl apply -f coffee-app/
 kubectl apply -f routing/coffee-routing.yaml
 ```
 
-You should see the `HTTPRoute` resource created in the `default` namespace:
-
 ```bash
 # kubectl get httproute -n default
 NAME           HOSTNAMES              AGE
@@ -111,7 +109,7 @@ chmod +x ingress2gateway && rm -f ingress2gateway_Linux_arm64.tar.gz
 
 * Be attention of your architecture when downloading the ingress2gateway binary. [[releases]](https://github.com/Kong/ingress2gateway/releases/)
 
-In order to convert the ingress to `HTTPRoute` resources you're going to need the ingress resources in the `source_dir` directory. [[See more]](https://docs.konghq.com/kubernetes-ingress-controller/latest/guides/migrate/ingress-to-gateway/)
+In order to convert the ingress to `HTTPRoute` resources you're going to need the ingresses manifests. [[See more]](https://docs.konghq.com/kubernetes-ingress-controller/latest/guides/migrate/ingress-to-gateway/)
 
 To accomplish this there is this `ingress-yaml-generator.py` script:
 
