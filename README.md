@@ -97,17 +97,15 @@ python-convert
 └── ingress2httproute.py
 ```
 
-`ingress-yaml-generator.py` generates all the current ingresses resources to the `ingress-manifests` directory.
+* `ingress-yaml-generator.py` - Generates all the current ingresses resources to the `ingress-manifests` directory.
+* `ingress2httproute.py` - Converts all the manifests in `ingress-manifests` to `HTTPRoute` manifests in `httproute-manifests` directory.
 
 ```bash
 cd python-convert/
 ./ingress-yaml-generator.py
 ```
 
-`ingress2httproute.py` converts all the manifests in `ingress-manifests` to `HTTPRoute` manifests in `httproute-manifests` directory.
-
 ```bash
-cd python-convert/
 ./ingress2httproute.py <your-gateway-namespace>
 ```
 
