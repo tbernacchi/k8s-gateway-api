@@ -1,6 +1,6 @@
 # k8s-gateway-api
 
-> This repo contains instructions to install the Gateway API and convert Ingresses to Gateway API resources.
+> Install the Gateway API and convert Ingresses to HTTPRoute resources.
 
 ### Install Gateway API CRDs 
 
