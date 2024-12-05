@@ -97,23 +97,23 @@ python-convert
 └── ingress2httproute.py
 ```
 
-The `ingress-yaml-generator.py` will generate all the current ingresses resources to the `ingress-manifests` directory.
+`ingress-yaml-generator.py` generates all the current ingresses resources to the `ingress-manifests` directory.
 
 ```bash
 cd python-convert/
 ./ingress-yaml-generator.py
 ```
 
-The `ingress2httproute.py` will convert all the manifests in `ingress-manifests` to `HTTPRoute` manifests in `httproute-manifests` directory.
+`ingress2httproute.py` converts all the manifests in `ingress-manifests` to `HTTPRoute` manifests in `httproute-manifests` directory.
 
 ```bash
 cd python-convert/
 ./ingress2httproute.py <your-gateway-namespace>
 ```
 
-* Another way to accomplish this is using the [ingress2gateway](https://docs.konghq.com/kubernetes-ingress-controller/latest/guides/migrate/ingress-to-gateway/)tool.
+* Another way to accomplish this is using the [ingress2gateway](https://docs.konghq.com/kubernetes-ingress-controller/latest/guides/migrate/ingress-to-gateway/) tool.
 
-> In my case I'm converting the ingresses to `HTTPRoute` resources and using only one Gateway resource for all the ingresses, different from [ingress2gateway](https://github.com/Kong/ingress2gateway/releases/) which creates a Gateway resource for each ingress along with the `HTTPRoute` resources.
+> In my case I'm converting all my ingresses to `HTTPRoute` resources and using only one Gateway resource for all the ingresses, different from [ingress2gateway](https://github.com/Kong/ingress2gateway/releases/) which creates a Gateway resource for each ingress along with the `HTTPRoute` resources.
 
 ### References
 
