@@ -1,8 +1,8 @@
 # k8s-gateway-api
 
-> This repo contains instructions to install the Gateway API on a k8s cluster and convert ingress resources to Gateway API resources.
+> This repo contains instructions to install the Gateway API and convert Ingresses to Gateway API resources.
 
-## Install Gateway API CRDs
+### Install Gateway API CRDs 
 
 ```bash
 kubectl kustomize "https://github.com/nginxinc/nginx-gateway-fabric/config/crd/gateway-api/standard?ref=v1.5.0" | kubectl apply -f -
@@ -12,11 +12,15 @@ kubectl kustomize "https://github.com/nginxinc/nginx-gateway-fabric/config/crd/g
 helm pull oci://ghcr.io/nginxinc/charts/nginx-gateway-fabric --untar
 cd nginx-gateway-fabric/
 helm install ngf . --create-namespace -n nginx-gateway
+```
 
 Checking pods and services:
 
 ```bash
-# k get pods -n nginx-gateway
+# kubectl get pods -n nginx-gateway
+NAME                                        READY   STATUS    RESTARTS   AGE
+ngf-nginx-gateway-fabric-777ccd44f5-ktzgz   2/2     Running   0          8m2s
+
 # k get svc -n nginx-gateway
 NAME                       TYPE           CLUSTER-IP    EXTERNAL-IP     PORT(S)                      AGE
 ngf-nginx-gateway-fabric   LoadBalancer   10.43.79.11   192.168.1.131   80:32158/TCP,443:30888/TCP   8m2s
@@ -26,9 +30,6 @@ ngf-nginx-gateway-fabric   LoadBalancer   10.43.79.11   192.168.1.131   80:32158
 
 ```bash
 git clone git@github.com:tbernacchi/k8s-gateway-api.git
-```
-
-```bash
 kubectl apply -f gateway/coffee-gateway.yaml
 ```
 
@@ -37,7 +38,7 @@ You should see the Gateway resource created in the `default` namespace.
 ```bash
 # k get gateway -n default
 NAME           CLASS   ADDRESS         PROGRAMMED   AGE
-cafe-gateway   nginx   192.168.1.131   True         22h
+cafe-gateway   nginx   192.168.1.131   True         12s
 ```
 
 Lets deploy `coffee-app/` to test the Gateway API:
@@ -103,6 +104,8 @@ kong-convert
 
 4 directories, 0 files
 ```
+
+I've installed mine on an arm64 machine, this was how I did it:
 
 ```bash
 cd kong-convert/ingress2gateway/
