@@ -56,7 +56,7 @@ NAME           HOSTNAMES              AGE
 coffee-route   ["cafe.example.com"]   10s
 ```
 
-Now you can test the Gateway API by accessing the coffee-app using the `cafe.example.com` hostname.
+### Testing
 
 ```bash
 # curl -is -H "Host: cafe.example.com" http://192.168.1.131:80/
@@ -113,7 +113,7 @@ chmod +x ingress2gateway && rm -f ingress2gateway_Linux_arm64.tar.gz
 
 In order to convert the ingress resources to Gateway API resources you will need to have the ingress resources in the `source_dir` directory and the destination directory will be populated with the converted HTTPRoute resources. [[See more]](https://docs.konghq.com/kubernetes-ingress-controller/latest/guides/migrate/ingress-to-gateway/)
 
-To accomplish this there is a python script in `source_dir/ingress-yaml-generator.py`:
+To accomplish this there is this `ingress-yaml-generator.py` script:
 
 ```bash
 cd kong-convert/
@@ -121,6 +121,7 @@ cd kong-convert/
 ```
 
 This script will generate the current ingress resources in the `source_dir/ingress-manifests` directory. 
+
 Now you can use the `ingress2gateway` binary to convert the ingress resources to HTTPRoute resources in the `dest_dir` directory.
 
 ```bash
@@ -137,3 +138,4 @@ for file in ${SOURCE_DIR}/*; do ./ingress2gateway print --input-file ${file} -A 
 - https://blog.nginx.org/blog/5-reasons-to-try-the-kubernetes-gateway-api
 - https://blog.nashtechglobal.com/hands-on-kubernetes-gateway-api-with-nginx-gateway-fabric/
 - https://docs.nginx.com/nginx-gateway-fabric/installation/installing-ngf/helm/
+
