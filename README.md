@@ -116,7 +116,8 @@ In order to convert the ingress resources to Gateway API resources you will need
 To accomplish this there is a python script in `source_dir/ingress-yaml-generator.py`:
 
 ```bash
-./ingress-yaml-generator.py
+cd kong-convert/
+./source_dir/ingress-yaml-generator.py
 ```
 
 This script will generate the current ingress resources in the `source_dir/ingress-manifests` directory. 
