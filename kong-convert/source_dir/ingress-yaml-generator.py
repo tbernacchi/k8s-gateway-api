@@ -31,6 +31,8 @@ def main():
         
         # Save each ingress in a separate file 
         with open(filename, 'w') as f:
+            # Add a separator in the beginning of the file.
+            f.write("---\n")
             yaml.dump(ing, f, default_flow_style=False)
             f.write('\n')  # Add an empty line in the end of the files.
         
