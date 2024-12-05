@@ -41,15 +41,10 @@ NAME           CLASS   ADDRESS         PROGRAMMED   AGE
 cafe-gateway   nginx   192.168.1.131   True         12s
 ```
 
-Lets deploy `coffee-app/` to test the Gateway API:
+Lets deploy `coffee-app/` and the HTTPRoute resource:
 
 ```bash
 kubectl apply -f coffee-app/
-```
-
-Now lets deploy the HTTPRoute resource:
-
-```bash
 kubectl apply -f routing/coffee-routing.yaml
 ```
 
@@ -116,15 +111,16 @@ chmod +x ingress2gateway && rm -f ingress2gateway_Linux_arm64.tar.gz
 
 * Be attention of your architecture when downloading the ingress2gateway binary. [releases](https://github.com/Kong/ingress2gateway/releases/)
 
-In order to convert the ingress resources to Gateway API resources you will need to have the ingress resources in the `source_dir` directory and the destination directory will be populated with the converted HTTPRoute resources. [See more](https://docs.konghq.com/kubernetes-ingress-controller/latest/guides/migrate/ingress-to-gateway/)
+In order to convert the ingress resources to Gateway API resources you will need to have the ingress resources in the `source_dir` directory and the destination directory will be populated with the converted HTTPRoute resources. [[See more]](https://docs.konghq.com/kubernetes-ingress-controller/latest/guides/migrate/ingress-to-gateway/)
 
-To accomplish there is this script in `source_dir/ingress-yaml-generator.py`:
+To accomplish this there is a python script in `source_dir/ingress-yaml-generator.py`:
 
 ```bash
 ./ingress-yaml-generator.py
 ```
 
-This script will generate the ingress resources in the `source_dir` directory and then you can use the `ingress2gateway` binary to convert the ingress resources to HTTPRoute resources in the `dest_dir` directory.
+This script will generate the current ingress resources in the `source_dir/ingress-manifests` directory. 
+Now you can use the `ingress2gateway` binary to convert the ingress resources to HTTPRoute resources in the `dest_dir` directory.
 
 ```bash
 cd ingress2gateway/
@@ -140,4 +136,3 @@ for file in ${SOURCE_DIR}/*; do ./ingress2gateway print --input-file ${file} -A 
 - https://blog.nginx.org/blog/5-reasons-to-try-the-kubernetes-gateway-api
 - https://blog.nashtechglobal.com/hands-on-kubernetes-gateway-api-with-nginx-gateway-fabric/
 - https://docs.nginx.com/nginx-gateway-fabric/installation/installing-ngf/helm/
-
