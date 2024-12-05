@@ -1,0 +1,36 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: cafe-gateway
+  namespace: default
+  annotations:
+    nginx.org/ssl-redirect: "false"
+spec:
+  gatewayClassName: nginx
+  listeners:
+  - name: http-default
+    port: 80
+    protocol: HTTP
+    allowedRoutes:
+      namespaces:
+        from: All    # all
+  - name: http-mykubernetes
+    hostname: mykubernetes.com
+    port: 80
+    protocol: HTTP
+    allowedRoutes:
+      namespaces:
+        from: All    # all
+  - name: https-mykubernetes
+    hostname: mykubernetes.com
+    port: 443
+    protocol: HTTPS
+    allowedRoutes:
+      namespaces:
+        from: All    # all
+    tls:
+      certificateRefs:
+      - kind: Secret
+        name: my-kubernetes-cert
+      mode: Terminate

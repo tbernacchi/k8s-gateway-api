@@ -30,7 +30,7 @@ ngf-nginx-gateway-fabric   LoadBalancer   10.43.79.11   192.168.1.131   80:32158
 
 ```bash
 git clone git@github.com:tbernacchi/k8s-gateway-api.git
-kubectl apply -f gateway/coffee-gateway.yaml
+kubectl apply -f gateway/001-coffee-gateway.yaml
 ```
 
 You should see the Gateway resource created in the `default` namespace:
@@ -44,8 +44,8 @@ cafe-gateway   nginx   192.168.1.131   True         12s
 Deploy `coffee-app/` and the `HTTPRoute` resources:
 
 ```bash
-kubectl apply -f coffee-app/
-kubectl apply -f routing/coffee-routing.yaml
+kubectl apply -f coffee-app/000-coffee-app.yaml
+kubectl apply -f routing/002-coffee-routing.yaml
 ```
 
 ```bash
@@ -84,56 +84,40 @@ ETag: W/"18-U4qjRk0fi49MfsSJ6en/kMpd8P0"
 Hello From COFFEE (V2)!
 ```
 
-### Convert Ingress resources to Gateway API resources
+### Convert Ingress resources to HTTPRoute/Gateway API resources
 
-On the `kong-convert/ingress2gateway/` directory it contains the official Kong conversion tool:
-
-```bash
-# tree kong-convert -L 1
-kong-convert
-├── dest_dir
-├── ingress2gateway
-└── source_dir
-
-4 directories, 0 files
-```
-
-I've installed mine on an arm64 machine, this was how I did it:
+On the `python-convert/` directory it contains two scripts `ingress-yaml-generator.py` and `ingress2httproute.py`:
 
 ```bash
-cd kong-convert/ingress2gateway/
-wget -O ingress2gateway_Linux_arm64.tar.gz https://github.com/Kong/ingress2gateway/releases/download/v0.1.0/ingress2gateway_Linux_arm64.tar.gz && \
-tar -xzf ingress2gateway_Linux_arm64.tar.gz && \
-chmod +x ingress2gateway && rm -f ingress2gateway_Linux_arm64.tar.gz
+k8s-gateway-api|main⚡ ⇒ tree python-convert -L 1
+python-convert
+├── httproute-manifests
+├── ingress-manifests
+├── ingress-yaml-generator.py
+└── ingress2httproute.py
 ```
 
-* Be attention of your architecture when downloading the ingress2gateway binary. [[releases]](https://github.com/Kong/ingress2gateway/releases/)
-
-In order to convert the ingress to `HTTPRoute` resources you're going to need the ingresses manifests. [[See more]](https://docs.konghq.com/kubernetes-ingress-controller/latest/guides/migrate/ingress-to-gateway/)
-
-To accomplish this there is this `ingress-yaml-generator.py` script:
+The `ingress-yaml-generator.py` will generate all the current ingresses resources in the `ingress-manifests` directory.
 
 ```bash
-cd kong-convert/
-./source_dir/ingress-yaml-generator.py
+cd python-convert/
+./ingress-yaml-generator.py
 ```
 
-This script will generate all the current ingresses resources in the `source_dir/ingress-manifests` directory. 
-
-Converting the ingresses to HTTPRoute resources:
+The `ingress2httproute.py` will convert all the manifests in `ingress-manifests` to `HTTPRoute` manifests in `httproute-manifests` directory.
 
 ```bash
-cd ingress2gateway/
-for file in ${SOURCE_DIR}/*; do ./ingress2gateway print --input-file ${file} -A --providers=kong --all-resources > ${DEST_DIR}/$(basename -- $file); done
+cd python-convert/
+./ingress2httproute.py <your-gateway-namespace>
 ```
 
-### WIP
+* Another way to accomplish this is using the [ingress2gateway](https://docs.konghq.com/kubernetes-ingress-controller/latest/guides/migrate/ingress-to-gateway/ tool.
 
-- [ ] I just want to create HTTPRoute on the output of the ingress2gateway conversion, not the Gateway resource. (Kong tool);
-- [ ] Put ["---"] on the output of ingress manifests on `source_dir/ingress-manifests` directory.
+In my case I'm converting the ingresses to `HTTPRoute` resources and using only one Gateway resource for all the ingresses, different from [ingress2gateway](https://github.com/Kong/ingress2gateway/releases/) which creates a Gateway resource for each ingress along with the `HTTPRoute` resources.
 
 ### References
 
 - https://blog.nginx.org/blog/5-reasons-to-try-the-kubernetes-gateway-api
 - https://blog.nashtechglobal.com/hands-on-kubernetes-gateway-api-with-nginx-gateway-fabric/
 - https://docs.nginx.com/nginx-gateway-fabric/installation/installing-ngf/helm/
+- https://docs.konghq.com/kubernetes-ingress-controller/latest/guides/migrate/ingress-to-gateway/

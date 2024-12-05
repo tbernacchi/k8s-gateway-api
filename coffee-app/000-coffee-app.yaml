@@ -1,0 +1,77 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: coffee-service-v1
+  namespace: default 
+spec:
+  selector:
+    app: coffee-v1
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: coffee-v1
+  namespace: default 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: coffee-v1
+  template:
+    metadata:
+      labels:
+        app: coffee-v1
+    spec:
+      containers:
+      - name: coffee-v1
+        image: docker.io/hahoang84/fake-service:v1.0.1
+        ports:
+        - containerPort: 8080
+        env:
+        - name: "NAME"
+          value: "COFFEE"
+        - name: "VERSION"
+          value: "V1"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: coffee-service-v2
+  namespace: default
+spec:
+  selector:
+    app: coffee-v2
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: coffee-v2
+  namespace: default 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: coffee-v2
+  template:
+    metadata:
+      labels:
+        app: coffee-v2
+    spec:
+      containers:
+      - name: coffee-v2
+        image: docker.io/hahoang84/fake-service:v1.0.1
+        ports:
+        - containerPort: 8080
+        env:
+        - name: "NAME"
+          value: "COFFEE"
+        - name: "VERSION"
+          value: "V2"
