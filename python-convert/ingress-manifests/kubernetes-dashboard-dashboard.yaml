@@ -1,14 +1,13 @@
+---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
     cert-manager.io/issuer: self-signed
-  creationTimestamp: "2024-07-24T01:48:49Z"
-  generation: 1
-  name: grafana
-  namespace: monitoring
-  resourceVersion: "10293440"
-  uid: ad41763a-3189-4a1e-a54f-4898a9eb0513
+    nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+    nginx.ingress.kubernetes.io/force-ssl-redirect: 'true'
+  name: dashboard
+  namespace: kubernetes-dashboard
 spec:
   ingressClassName: nginx
   rules:
@@ -17,16 +16,13 @@ spec:
       paths:
       - backend:
           service:
-            name: my-kube-prometheus-stack-grafana
+            name: kubernetes-dashboard-kong-proxy
             port:
-              number: 80
-        path: /grafana
+              number: 443
+        path: /
         pathType: Prefix
   tls:
   - hosts:
     - mykubernetes.com
     secretName: my-kubernetes-cert
-status:
-  loadBalancer:
-    ingress:
-    - ip: 192.168.1.130
+
