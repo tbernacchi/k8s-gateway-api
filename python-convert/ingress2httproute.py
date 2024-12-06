@@ -38,8 +38,8 @@ def convert_ingress_to_httproute(ingress_yaml: Dict, gateway_name: str) -> Dict:
                         }],
                         "matches": [{
                             "path": {
-                                "type": path.get("pathType", "PathPrefix"),  # Use the pathType from Ingress
-                                "value": path["path"]  # Use the path as specified in Ingress
+                                "type": "PathPrefix" if path.get("pathType") == "Prefix" else path.get("pathType", "PathPrefix"),
+                                "value": path["path"]
                             }
                         }]
                     }
