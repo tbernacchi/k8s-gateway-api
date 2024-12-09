@@ -3,6 +3,7 @@ import yaml
 import os
 import argparse
 from typing import Dict, List
+from collections import OrderedDict
 
 def convert_ingress_to_httproute(ingress_yaml: Dict, gateway_name: str) -> Dict:
     """Convert a single Ingress manifest to HTTPRoute manifest."""
@@ -31,18 +32,29 @@ def convert_ingress_to_httproute(ingress_yaml: Dict, gateway_name: str) -> Dict:
         for rule in ingress_yaml["spec"]["rules"]:
             if "http" in rule:
                 for path in rule["http"]["paths"]:
-                    httproute_rule = {
-                        "backendRefs": [{
-                            "name": path["backend"]["service"]["name"],
-                            "port": path["backend"]["service"]["port"]["number"]
-                        }],
-                        "matches": [{
-                            "path": {
-                                "type": "PathPrefix" if path.get("pathType") == "Prefix" else path.get("pathType", "PathPrefix"),
-                                "value": path["path"]
-                            }
-                        }]
-                    }
+                    # Mapeamento de pathType do Ingress para Gateway API
+                    path_type = path.get("pathType", "Prefix")
+                    if path_type == "ImplementationSpecific":
+                        path_type = "PathPrefix"
+                    elif path_type == "Prefix":
+                        path_type = "PathPrefix"
+                    elif path_type == "Exact":
+                        path_type = "Exact"
+                    
+                    httproute_rule = OrderedDict()
+                    
+                    # Adicionando na ordem exata que queremos
+                    httproute_rule["backendRefs"] = [{
+                        "name": path["backend"]["service"]["name"],
+                        "port": path["backend"]["service"]["port"]["number"]
+                    }]
+                    
+                    httproute_rule["matches"] = [{
+                        "path": {
+                            "type": path_type,
+                            "value": path["path"].split("(/|$)")[0]
+                        }
+                    }]
                     
                     httproute["spec"]["rules"].append(httproute_rule)
     
@@ -72,10 +84,13 @@ def process_directory(input_dir: str, output_dir: str, gateway_name: str):
             if httproutes:
                 with open(output_path, 'w') as f:
                     f.write("---\n")  # Add YAML document separator at the top
-                    yaml.dump_all(httproutes, f)
+                    yaml.dump_all(httproutes, f, default_flow_style=False, sort_keys=False)
                 print(f"Converted {input_path} to {output_path}")
 
 if __name__ == "__main__":
+    # Configurar o YAML para tratar OrderedDict como dict normal
+    yaml.add_representer(OrderedDict, lambda dumper, data: dumper.represent_dict(dict(data)))
+    
     parser = argparse.ArgumentParser(description="Convert Ingress YAML to HTTPRoute YAML.")
     parser.add_argument("gateway_name", help="Name of the gateway to use in HTTPRoute manifests")
     
@@ -85,4 +100,3 @@ if __name__ == "__main__":
     output_directory = "httproute-manifests"
     
     process_directory(input_directory, output_directory, args.gateway_name)
-
