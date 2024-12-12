@@ -3,11 +3,10 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    cert-manager.io/issuer: self-signed
-    nginx.ingress.kubernetes.io/backend-protocol: HTTPS
-    nginx.ingress.kubernetes.io/proxy-body-size: '0'
+    nginx.ingress.kubernetes.io/backend-protocol: HTTP
     nginx.ingress.kubernetes.io/rewrite-target: /$2
-    nginx.ingress.kubernetes.io/ssl-passthrough: 'true'
+    nginx.ingress.kubernetes.io/proxy-ssl-verify: 'false'
+    nginx.ingress.kubernetes.io/ssl-redirect: 'false'
   name: argo-server
   namespace: argo
 spec:
@@ -23,8 +22,3 @@ spec:
               number: 2746
         path: /argo(/|$)(.*)
         pathType: ImplementationSpecific
-  tls:
-  - hosts:
-    - mykubernetes.com
-    secretName: my-kubernetes-cert
-
